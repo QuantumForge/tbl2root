@@ -6,22 +6,27 @@ INCLUDE_PATH=-I/usr/include/mysql/server
 CFLAGS=$(ROOT_CFLAGS) -fPIC -Wall -Wshadow
 
 obj = vtbl.o \
+	vtblFactory.o \
 	tblL3_Telescope_TriggerInfo.o \
 	tblRun_Info.o \
 	tbl2root.o
 dictobj = vtblDict.o \
+	vtblFactoryDict.o \
 	tblL3_Telescope_TriggerInfoDict.o \
 	tblRun_InfoDict.o \
 	tbl2rootDict.o
 dictheader = vtblDict.h \
+	vtblFactoryDict.h \
 	tblL3_Telescope_TriggerInfoDict.h \
 	tblRun_InfoDict.h \
 	tbl2rootDict.h
 dictsource = vtblDict.C \
+	vtblFactoryDict.C \
 	tblL3_Telescope_TriggerInfoDict.C \
 	tblRun_InfoDict.C \
 	tbl2rootDict.C
 dictlinkdef = vtblLinkDef.h \
+	vtblFectoryLinkDef.h \
 	tblL3_Telescope_TriggerInfoLinkDef.h \
 	tblRun_InfoLinkDef.h \
 	tbl2rootLinkDef.h

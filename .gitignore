@@ -1,0 +1,6 @@
+*.swp
+*.root
+*.so
+*.pcm
+*.o
+*Dict.C
