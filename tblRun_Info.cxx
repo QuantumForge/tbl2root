@@ -33,32 +33,8 @@ void tblRun_Info::Clear(Option_t *option)
 }
 
 
-int tblRun_Info::Fill(TSQLStatement *statement, int verbose)
+void tblRun_Info::fillTblFields(TSQLStatement *statement, int verbose)
 {
-    if (!statement)
-    {
-        std::cerr << tblName << "::Fill: statement invalid" << std::endl;
-        return -1;
-    }
-    statement->Process();
-    statement->StoreResult();
-    if (statement->GetNumFields() != nFields)
-    {
-        std::cerr << tblName << "::Fill: statement NumFields (" <<
-            statement->GetNumFields() << ") != " << nFields << std::endl;
-    }
-
-    if (verbose)
-    {
-        std::cout << "NumFields = " << statement->GetNumFields() << std::endl;
-        for (int i = 0; i < statement->GetNumFields(); i++)
-            std::cout << "Field " << i << " = " << statement->GetFieldName(i) <<
-            std::endl;
-    }
-
-    if (!statement->NextResultRow())
-        return 0;
-
     run_id = statement->GetInt(0);
     run_type = statement->GetInt(1);
     observing_mode = statement->GetInt(2);
@@ -84,12 +60,4 @@ int tblRun_Info::Fill(TSQLStatement *statement, int verbose)
     offset_distance = statement->GetDouble(17);
     offset_angle = statement->GetDouble(18);
     source_id = statement->GetString(19);
-
-    Dump();
-    std::cout << db_start_time.AsString() << std::endl;
-    std::cout << db_end_time.AsString() << std::endl;
-    std::cout << data_start_time.AsString() << std::endl;
-    std::cout << data_end_time.AsString() << std::endl;
-    
-    return 1;
 }

@@ -21,6 +21,8 @@ class tblL3_Telescope_TriggerInfo: public vtbl
 	unsigned int VDAQBusyScaler;
 	unsigned int TenMHzScaler;
 
+	void fillTblFields(TSQLStatement *statement, int verbose = 0);
+
     public:
         tblL3_Telescope_TriggerInfo();
 

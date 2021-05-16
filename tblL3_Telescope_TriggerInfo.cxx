@@ -25,33 +25,9 @@ void tblL3_Telescope_TriggerInfo::Clear(Option_t *option)
     TenMHzScaler = 0;
 }
 
-int tblL3_Telescope_TriggerInfo::Fill(TSQLStatement *statement, int verbose)
+void tblL3_Telescope_TriggerInfo::fillTblFields(TSQLStatement *statement,
+    int verbose)
 {
-    if (!statement)
-    {
-        std::cerr << "tblL3_Telescope_TriggerInfo::Fill: statement invalid" <<
-	    std::endl;
-        return -1;
-    }
-
-    if (statement->GetNumFields() != nFields)
-    {
-        std::cerr << "tblL3_Telescope_TriggerInfo::Fill: "
-	    "statement NumFields (" << statement->GetNumFields() <<
-	    ") != " << nFields << std::endl;
-        return -1;
-    }
-    
-    if (verbose)
-    {
-	std::cout << "NumFields = " << statement->GetNumFields() << std::endl;
-	for (int i = 0; i < statement->GetNumFields(); i++)
-	    std::cout << "Field " << i << " = " << statement->GetFieldName(i) <<
-	    std::endl;
-    }
-
-    if (!statement->NextResultRow())
-        return 0;
     statement->GetTimestamp(0, timestamp);
     run_id = statement->GetInt(1);
     telescope_id = statement->GetUInt(2);
@@ -64,6 +40,4 @@ int tblL3_Telescope_TriggerInfo::Fill(TSQLStatement *statement, int verbose)
     VDAQBusy = statement->GetDouble(9);
     VDAQBusyScaler = statement->GetUInt(10);
     TenMHzScaler = statement->GetUInt(11);
-
-   return 1;
 }

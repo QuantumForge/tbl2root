@@ -28,6 +28,8 @@ class tblRun_Info: public vtbl
 	double offset_distance;
 	double offset_angle;
 	std::string source_id;
+
+	void fillTblFields(TSQLStatement *statement, int verbose = 0);
 	
 
     public:
