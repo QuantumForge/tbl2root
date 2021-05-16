@@ -33,7 +33,7 @@ tbl2root::~tbl2root()
     delete db;
 }
 
-vtbl *tbl2root::addTbl(const char *tblName, TTree * &tree)
+vtbl *tbl2root::addTbl(const char *tblName, TTree **tree)
 {
     if (tblList->FindObject(tblName))
     {
@@ -53,18 +53,21 @@ vtbl *tbl2root::addTbl(const char *tblName, TTree * &tree)
         newTbl->getTblName().c_str());
     t1->Branch(newTbl->getTblName().c_str(), newTbl);
     treeList->Add(t1);
-    tree = t1;
+
+    // return pointers to the newly created tree and and vtbl
+    if (tree)
+        *tree = t1;
     return newTbl;
 }
 
-const vtbl *tbl2root::getTbl(const char *tblName)
+vtbl *tbl2root::getTbl(const char *tblName) const
 {
-    return (const vtbl*)tblList->FindObject(tblName);
+    return (vtbl*)tblList->FindObject(tblName);
 }
 
-const TTree *tbl2root::getTree(const char *treeName)
+TTree *tbl2root::getTree(const char *treeName) const
 {
-    return (const TTree*)treeList->FindObject(treeName);
+    return (TTree*)treeList->FindObject(treeName);
 }
 
 int tbl2root::fillTree(const char *treeName)
