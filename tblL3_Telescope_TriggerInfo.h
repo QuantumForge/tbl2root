@@ -25,9 +25,9 @@ class tblL3_Telescope_TriggerInfo: public vtbl
 
     public:
         tblL3_Telescope_TriggerInfo();
+        ~tblL3_Telescope_TriggerInfo();
 
 	void Clear(Option_t * = "");
-	int Fill(TSQLStatement *statement, int verbose = 0);
 
         TTimeStamp get_timestamp() const { return timestamp; }
 	int get_run_id() const { return run_id; }

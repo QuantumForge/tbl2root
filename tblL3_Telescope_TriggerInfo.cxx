@@ -7,6 +7,24 @@ tblL3_Telescope_TriggerInfo::tblL3_Telescope_TriggerInfo():
     vtbl("tblL3_Telescope_TriggerInfo")
 {
     Clear();
+    tree = new TTree(tblName.c_str(), tblName.c_str());
+    tree->Branch("timestamp", &(this->timestamp));
+    tree->Branch("run_id", &(this->run_id));
+    tree->Branch("telescope_id", &(this->telescope_id));
+    tree->Branch("L2", &(this->L2));
+    tree->Branch("QI", &(this->QI));
+    tree->Branch("HM", &(this->HM));
+    tree->Branch("NP", &(this->NP));
+    tree->Branch("L2LL3", &(this->L2LL3));
+    tree->Branch("L3", &(this->L3));
+    tree->Branch("VDAQBusy", &(this->VDAQBusy));
+    tree->Branch("VDAQBusyScaler", &(this->VDAQBusyScaler));
+    tree->Branch("TenMHzScaler", &(this->TenMHzScaler));
+}
+
+tblL3_Telescope_TriggerInfo::~tblL3_Telescope_TriggerInfo()
+{
+
 }
 
 void tblL3_Telescope_TriggerInfo::Clear(Option_t *option)
@@ -28,7 +46,9 @@ void tblL3_Telescope_TriggerInfo::Clear(Option_t *option)
 void tblL3_Telescope_TriggerInfo::fillTblFields(TSQLStatement *statement,
     int verbose)
 {
-    statement->GetTimestamp(0, timestamp);
+    int year, month, day, hour, min, sec, frac;
+    statement->GetTimestamp(0, year, month, day, hour, min, sec, frac);
+    timestamp = TTimeStamp(year, month, day, hour, min, sec);
     run_id = statement->GetInt(1);
     telescope_id = statement->GetUInt(2);
     L2 = statement->GetInt(3);

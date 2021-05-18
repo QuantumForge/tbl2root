@@ -18,10 +18,8 @@ class tbl2root
         tbl2root();
         virtual ~tbl2root();
 
-	vtbl *addTbl(const char *tblName, TTree **tree = 0);
+	vtbl *addTbl(const char *tblName);
 	vtbl *getTbl(const char *tblName) const;
-	TTree *getTree(const char *treeName) const;
-        int fillTree(const char *treeName = 0);
 	void printTblList() const { if (tblList) tblList->Print(); }
         
         int queryByRun(const char *tblName, int runNum);
@@ -38,7 +36,6 @@ class tbl2root
         TMySQLServer *db;
 
 	TList *tblList;
-        TList *treeList;
 
         std::string genQuery();
 

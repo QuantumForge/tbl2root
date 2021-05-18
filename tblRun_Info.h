@@ -1,4 +1,3 @@
-
 #ifndef TBLRUNINFO_H
 #define TBLRUNINFO_H
 
@@ -34,9 +33,9 @@ class tblRun_Info: public vtbl
 
     public:
         tblRun_Info();
+        ~tblRun_Info();
 
 	void Clear(Option_t * = "");
-	int Fill(TSQLStatement *statement, int verbose = 0);
 
 	int get_run_id() const { return run_id; }
 	int get_run_type() const { return run_type; }
@@ -93,8 +92,6 @@ class tblRun_Info: public vtbl
 	    { offset_angle = offset_angle_; }
 	void set_source_id(const char *source_id_) { source_id = source_id_; }
 	
-	
-
 	ClassDef(tblRun_Info, 1);
 };
 

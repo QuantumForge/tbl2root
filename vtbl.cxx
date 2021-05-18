@@ -1,6 +1,9 @@
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
+
+#include "TMySQLStatement.h"
 
 #include "vtbl.h"
 ClassImp(vtbl);
@@ -10,6 +13,9 @@ const std::vector<struct VTBLS> vtbl::vtbls = {
     {"tblL3_Telescope_TriggerInfo", "tblL3_Telescope_TriggerInfo", 12},
     {"tblRun_Info", "tblRun_Info", 20}
 };
+
+TMySQLServer vtbl::server("mysql://romulus.ucsc.edu/VERITAS",
+    "readonly", "");
 
 vtbl::vtbl(std::string tblName_)
 {
@@ -24,8 +30,7 @@ vtbl::vtbl(std::string tblName_)
     tblName = tblName_;
     nFields = it->nFields;
 
-    tree = new TTree(tblName.c_str(), tblName.c_str());
-    tree->Branch(tblName.c_str(), this);
+    //std::cout << vtbl::server.ServerInfo() << std::endl;
 }
 
 vtbl::~vtbl()
@@ -46,6 +51,7 @@ int vtbl::fill(TSQLStatement *statement, int verbose)
     {
         std::cerr << tblName << "::fill: statement NumFields (" <<
             statement->GetNumFields() << ") != " << nFields << std::endl;
+        return 0;
     }
 
     if (verbose)
@@ -55,14 +61,26 @@ int vtbl::fill(TSQLStatement *statement, int verbose)
             std::cout << "Field " << i << " = " << statement->GetFieldName(i) <<
             std::endl;
     }
+    
+    int nbytes = 0;
+    while (statement->NextResultRow())
+    {
+        std::cout << "nbytes" << std::endl;
+        fillTblFields(statement, verbose);
+        if (tree) nbytes += tree->Fill();
+    }
 
-    if (!statement->NextResultRow())
-        return 0;
+    return nbytes;
+}
 
-    fillTblFields(statement, verbose);
+int vtbl::fillByRun(int runID)
+{
+    std::ostringstream os;
+    os << "SELECT * FROM " << tblName << " WHERE run_id=" << runID;
+    std::string query(os.str().c_str());
+    TMySQLStatement *result =
+        (TMySQLStatement*)vtbl::server.Statement(os.str().c_str());
 
-    if (tree)
-        tree->Fill();
-
-    return 1;
+    int k = fill(result);
+    return k;
 }

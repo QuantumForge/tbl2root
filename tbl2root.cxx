@@ -22,18 +22,16 @@ tbl2root::tbl2root()
 	throw std::runtime_error(db->GetErrorMsg());
 
     tblList = new TList();
-    treeList = new TList();
 }
 
 tbl2root::~tbl2root()
 {
-    delete treeList;
     delete tblList;
     db->Close();
     delete db;
 }
 
-vtbl *tbl2root::addTbl(const char *tblName, TTree **tree)
+vtbl *tbl2root::addTbl(const char *tblName)
 {
     if (tblList->FindObject(tblName))
     {
@@ -49,37 +47,12 @@ vtbl *tbl2root::addTbl(const char *tblName, TTree **tree)
     }
 
     tblList->Add(newTbl);	
-    TTree *t1 = new TTree(newTbl->getTblName().c_str(),
-        newTbl->getTblName().c_str());
-    t1->Branch(newTbl->getTblName().c_str(), newTbl);
-    treeList->Add(t1);
-
-    // return pointers to the newly created tree and and vtbl
-    if (tree)
-        *tree = t1;
     return newTbl;
 }
 
 vtbl *tbl2root::getTbl(const char *tblName) const
 {
     return (vtbl*)tblList->FindObject(tblName);
-}
-
-TTree *tbl2root::getTree(const char *treeName) const
-{
-    return (TTree*)treeList->FindObject(treeName);
-}
-
-int tbl2root::fillTree(const char *treeName)
-{
-    int nbytes = 0;
-    TIter next(treeList);
-    while (TTree *t = (TTree*)next())
-    {
-        if (!treeName || std::string(t->GetName()) == treeName)
-            nbytes += t->Fill();
-    }
-    return nbytes;
 }
 
 void tbl2root::getL3RunStartStopTimes(int runID, double &runStart,
