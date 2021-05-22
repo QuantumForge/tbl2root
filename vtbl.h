@@ -22,14 +22,17 @@ class vtbl: public TObject
 	static const std::vector<struct VTBLS> vtbls; //! no streamer
         static TMySQLServer server;  //! no streamer
 
-	std::string tblName;
-	std::string treeName;
-	int nFields;
+	std::string tblName;  //! no streamer
+	std::string treeName; //! no streamer
+	int nFields;          //! no streamer
 
 	TTree *tree;  //! no streamer
 
+	//virtual std::string getRunTimesClause(TTimeStamp startTime,
+        //    TTimeStamp stopTime) const = 0;
 	virtual void fillTblFields(TSQLStatement *statement,
             int verbose = 0) = 0;
+        virtual TTimeStamp xformIntToTimestamp(long timestamp) const;
 
     public:
         vtbl(std::string tblName_ = "");
@@ -40,6 +43,7 @@ class vtbl: public TObject
 	virtual int fill(TSQLStatement *statement, int verbose = 0);
         virtual std::string getTblName() const { return tblName; }
 	virtual int getNFields() const { return nFields; }
+        virtual bool pingServer() const { return vtbl::server.PingVerify(); }
 
         virtual int fillByRun(int runID);
 	//virtual int queryByStatement(TSQLServer *server, std::string stmt);

@@ -1,4 +1,8 @@
 #include <iostream>
+#include <sstream>
+
+#include "TMySQLStatement.h"
+
 #include "tblL3_Telescope_TriggerInfo.h"
 ClassImp(tblL3_Telescope_TriggerInfo);
 
@@ -8,18 +12,7 @@ tblL3_Telescope_TriggerInfo::tblL3_Telescope_TriggerInfo():
 {
     Clear();
     tree = new TTree(tblName.c_str(), tblName.c_str());
-    tree->Branch("timestamp", &(this->timestamp));
-    tree->Branch("run_id", &(this->run_id));
-    tree->Branch("telescope_id", &(this->telescope_id));
-    tree->Branch("L2", &(this->L2));
-    tree->Branch("QI", &(this->QI));
-    tree->Branch("HM", &(this->HM));
-    tree->Branch("NP", &(this->NP));
-    tree->Branch("L2LL3", &(this->L2LL3));
-    tree->Branch("L3", &(this->L3));
-    tree->Branch("VDAQBusy", &(this->VDAQBusy));
-    tree->Branch("VDAQBusyScaler", &(this->VDAQBusyScaler));
-    tree->Branch("TenMHzScaler", &(this->TenMHzScaler));
+    tree->Branch(tblName.c_str(), this);
 }
 
 tblL3_Telescope_TriggerInfo::~tblL3_Telescope_TriggerInfo()
@@ -46,9 +39,8 @@ void tblL3_Telescope_TriggerInfo::Clear(Option_t *option)
 void tblL3_Telescope_TriggerInfo::fillTblFields(TSQLStatement *statement,
     int verbose)
 {
-    int year, month, day, hour, min, sec, frac;
-    statement->GetTimestamp(0, year, month, day, hour, min, sec, frac);
-    timestamp = TTimeStamp(year, month, day, hour, min, sec);
+    long int t = statement->GetLong(0);
+    timestamp = xformIntToTimestamp(t);
     run_id = statement->GetInt(1);
     telescope_id = statement->GetUInt(2);
     L2 = statement->GetInt(3);
@@ -60,4 +52,35 @@ void tblL3_Telescope_TriggerInfo::fillTblFields(TSQLStatement *statement,
     VDAQBusy = statement->GetDouble(9);
     VDAQBusyScaler = statement->GetUInt(10);
     TenMHzScaler = statement->GetUInt(11);
+}
+
+int tblL3_Telescope_TriggerInfo::fillByRun(int runID)
+{
+    TTimeStamp start, stop;
+    getRunTimes(runID, start, stop);
+
+    if (start.AsDouble() <= 1.e-9 || stop.AsDouble() <= 1.e-9)
+    {
+        std::cerr << "tblL3_Telescope_TriggerInfo::fillByRun: start: " <<
+            start.AsString() << ", stop: " << stop.AsString() << std::endl;
+        return 0;
+    }
+
+    std::ostringstream start_timestamp;
+    start_timestamp << start.GetDate() << start.GetTime() << "000";
+    std::ostringstream stop_timestamp;
+    stop_timestamp << stop.GetDate() << stop.GetTime() << "000";
+
+    std::ostringstream os;
+    os << "SELECT * FROM " << tblName << " WHERE run_id=" << runID <<
+        " AND timestamp>" << start_timestamp.str() <<
+        " AND timestamp<" << stop_timestamp.str();
+    std::string query(os.str().c_str());
+    std:: cout << "query: " << query << std::endl;
+    TMySQLStatement *result =
+        (TMySQLStatement*)vtbl::server.Statement(query.c_str());
+
+    int k = fill(result);
+    delete result;
+    return k;
 }

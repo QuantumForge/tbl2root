@@ -28,6 +28,7 @@ class tblL3_Telescope_TriggerInfo: public vtbl
         ~tblL3_Telescope_TriggerInfo();
 
 	void Clear(Option_t * = "");
+        int fillByRun(int runID);
 
         TTimeStamp get_timestamp() const { return timestamp; }
 	int get_run_id() const { return run_id; }

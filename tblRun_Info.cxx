@@ -7,26 +7,7 @@ tblRun_Info::tblRun_Info(): vtbl("tblRun_Info")
 {
     Clear();
     tree = new TTree(tblName.c_str(), tblName.c_str());
-    tree->Branch("run_id", &(this->run_id));
-    tree->Branch("run_type", &(this->run_type));
-    tree->Branch("observing_mode", &(this->observing_mode));
-    tree->Branch("run_status", &(this->run_status));
-    tree->Branch("db_start_time", &(this->db_start_time));
-    tree->Branch("db_end_time", &(this->db_end_time));
-    tree->Branch("data_start_time", &(this->data_start_time));
-    tree->Branch("data_end_time", &(this->data_end_time));
-    tree->Branch("duration", &(this->duration));
-    tree->Branch("weather", &(this->weather));
-    tree->Branch("config_mask", &(this->config_mask));
-    tree->Branch("pointing_mode", &(this->pointing_mode));
-    tree->Branch("trigger_config", &(this->trigger_config));
-    tree->Branch("trigger_multiplicity", &(this->trigger_multiplicity));
-    tree->Branch("trigger_coincidence", &(this->trigger_coincidence));
-    tree->Branch("offsetRA", &(this->offsetRA));
-    tree->Branch("offsetDEC", &(this->offsetDEC));
-    tree->Branch("offset_distance", &(this->offset_distance));
-    tree->Branch("offset_angle", &(this->offset_angle));
-    tree->Branch("source_id", &(this->source_id));
+    tree->Branch(tblName.c_str(), this);
 }
 
 tblRun_Info::~tblRun_Info()

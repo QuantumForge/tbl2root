@@ -74,7 +74,6 @@ int vtbl::fill(TSQLStatement *statement, int verbose)
     int nbytes = 0;
     while (statement->NextResultRow())
     {
-        std::cout << "nbytes" << std::endl;
         fillTblFields(statement, verbose);
         if (tree) nbytes += tree->Fill();
     }
@@ -94,7 +93,6 @@ int vtbl::fillByRun(int runID)
     delete result;
     return k;
 }
-
 
 void vtbl::getRunTimes(int runID,
     TTimeStamp &db_start_time, TTimeStamp &db_end_time) const
@@ -121,4 +119,33 @@ void vtbl::getRunTimes(int runID,
     }
     
     delete result;
+}
+
+
+TTimeStamp vtbl::xformIntToTimestamp(long timestamp) const
+{
+    // int value must look like YYYYMMDDHHMMSSXXX where XXX is some
+    // fraction of seconds. because XXX length is not being assumed, the
+    // safest way to do this is to convert to string, then pick off
+    // values from the left.
+    std::ostringstream os;
+    os << timestamp;
+
+    std::string t(os.str());
+    // format the string to length we require.
+    t = t.substr(0, 23);
+    // total length needs to be 23 to accomodate nanosec properly in
+    // this format.
+    t.append(23 - t.length(), '0'); 
+
+    int year = std::stoi(t.substr(0, 4));
+    int month = std::stoi(t.substr(4, 2));
+    int day = std::stoi(t.substr(6, 2));
+    int hour = std::stoi(t.substr(8, 2));
+    int minute = std::stoi(t.substr(10, 2));
+    int second = std::stoi(t.substr(12, 2));
+    int nsec = std::stoi(t.substr(14));
+    //std::cout << year << " " << month << " " << day << " " << hour << " " <<
+    //    minute << " " << second << " " << nsec << std::endl;
+    return TTimeStamp(year, month, day, hour, minute, second, nsec);
 }
