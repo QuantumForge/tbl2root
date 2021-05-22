@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "TMySQLStatement.h"
+#include "TSQLTableInfo.h"
 
 #include "vtbl.h"
 ClassImp(vtbl);
@@ -36,6 +37,14 @@ vtbl::vtbl(std::string tblName_)
 vtbl::~vtbl()
 {
     delete tree;
+}
+
+void vtbl::describe() const
+{
+    TSQLTableInfo *tableInfo = vtbl::server.GetTableInfo(tblName.c_str());
+    if (!tableInfo) return;
+    tableInfo->Print();
+    delete tableInfo;
 }
 
 int vtbl::fill(TSQLStatement *statement, int verbose)
@@ -82,5 +91,34 @@ int vtbl::fillByRun(int runID)
         (TMySQLStatement*)vtbl::server.Statement(os.str().c_str());
 
     int k = fill(result);
+    delete result;
     return k;
+}
+
+
+void vtbl::getRunTimes(int runID,
+    TTimeStamp &db_start_time, TTimeStamp &db_end_time) const
+{
+    db_start_time = 0;
+    db_end_time = 0;
+
+    std::ostringstream os;
+    os << "SELECT db_start_time,db_end_time FROM tblRun_Info WHERE "
+        "run_id=" << runID;
+    TMySQLStatement *result =
+        (TMySQLStatement*)vtbl::server.Statement(os.str().c_str());
+    result->Process();
+    result->StoreResult();
+
+    if (result->NextResultRow())
+    {
+	int year, month, day, hour, min, sec, frac;
+        result->GetTimestamp(0, year, month, day, hour, min, sec, frac);
+        db_start_time = TTimeStamp(year, month, day, hour, min, sec);
+
+        result->GetTimestamp(1, year, month, day, hour, min, sec, frac);
+        db_end_time = TTimeStamp(year, month, day, hour, min, sec);
+    }
+    
+    delete result;
 }

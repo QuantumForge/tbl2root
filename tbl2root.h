@@ -24,21 +24,12 @@ class tbl2root
         
         int queryByRun(const char *tblName, int runNum);
 
-	void getL3RunStartStopTimes(int runID,
-            double &runStart, double &runStop);
-
     private:
-        static const std::string dbServer;
-        static const std::string dbName;
-        static const std::string dbUser;
-        static const std::string dbPW;
-
         TMySQLServer *db;
 
 	TList *tblList;
 
         std::string genQuery();
-
 };
 
 #endif

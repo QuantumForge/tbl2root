@@ -6,6 +6,7 @@
 #include "TMySQLServer.h"
 #include "TObject.h"
 #include "TSQLStatement.h"
+#include "TTimeStamp.h"
 #include "TTree.h"
 
 struct VTBLS
@@ -35,12 +36,15 @@ class vtbl: public TObject
         virtual ~vtbl(); 
 	
 	virtual void Clear(Option_t * = "") = 0;
+        virtual void describe() const;
 	virtual int fill(TSQLStatement *statement, int verbose = 0);
         virtual std::string getTblName() const { return tblName; }
 	virtual int getNFields() const { return nFields; }
 
         virtual int fillByRun(int runID);
 	//virtual int queryByStatement(TSQLServer *server, std::string stmt);
+	virtual void getRunTimes(int runID, TTimeStamp &db_start_time,
+            TTimeStamp &db_end_time) const;
 
 	virtual TTree *getTree() const { return tree; }
 	virtual void setTree(TTree *tree_) { tree = tree_; }
