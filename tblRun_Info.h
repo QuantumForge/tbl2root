@@ -1,5 +1,5 @@
-#ifndef TBLRUNINFO_H
-#define TBLRUNINFO_H
+#ifndef TBLRUN_INFO_H
+#define TBLRUN_INFO_H
 
 #include "TTimeStamp.h"
 #include "vtbl.h"

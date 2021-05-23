@@ -2,6 +2,10 @@
 
 vtbl *vtblFactory::create(std::string tblName)
 {
+    if (tblName == "tblL3_Array_TriggerInfo")
+    {
+        return new tblL3_Array_TriggerInfo;
+    }
     if (tblName == "tblL3_Telescope_TriggerInfo")
     {
         return new tblL3_Telescope_TriggerInfo;

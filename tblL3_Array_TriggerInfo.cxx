@@ -4,57 +4,55 @@
 
 #include "TMySQLStatement.h"
 
-#include "tblL3_Telescope_TriggerInfo.h"
-ClassImp(tblL3_Telescope_TriggerInfo);
+#include "tblL3_Array_TriggerInfo.h"
+ClassImp(tblL3_Array_TriggerInfo);
 
 
-tblL3_Telescope_TriggerInfo::tblL3_Telescope_TriggerInfo():
-    vtbl("tblL3_Telescope_TriggerInfo")
+tblL3_Array_TriggerInfo::tblL3_Array_TriggerInfo():
+    vtbl("tblL3_Array_TriggerInfo")
 {
     Clear();
     tree = new TTree(tblName.c_str(), tblName.c_str());
     tree->Branch(tblName.c_str(), this);
 }
 
-tblL3_Telescope_TriggerInfo::~tblL3_Telescope_TriggerInfo()
+tblL3_Array_TriggerInfo::~tblL3_Array_TriggerInfo()
 {
 
 }
 
-void tblL3_Telescope_TriggerInfo::Clear(Option_t *option)
+void tblL3_Array_TriggerInfo::Clear(Option_t *option)
 {
     timestamp = 0;
     run_id = 0;
-    telescope_id = 0;
-    L2 = 0;
-    QI = 0;
-    HM = 0;
-    NP = 0;
-    L2LL3 = 0;
     L3 = 0;
+    L3orVDAQBusy = 0.;
     VDAQBusy = 0.;
+    SpareBusy = 0.;
+    PED = 0;
+    OC = 0;
     VDAQBusyScaler = 0;
+    L3orVDAQBusyScaler = 0;
     TenMHzScaler = 0;
 }
 
-void tblL3_Telescope_TriggerInfo::fillTblFields(TSQLStatement *statement,
+void tblL3_Array_TriggerInfo::fillTblFields(TSQLStatement *statement,
     int verbose)
 {
     timestamp = xformIntToTimestamp(statement->GetLong(0));
     run_id = statement->GetInt(1);
-    telescope_id = statement->GetUInt(2);
-    L2 = statement->GetInt(3);
-    QI = statement->GetInt(4);
-    HM = statement->GetInt(5);
-    NP = statement->GetInt(6);
-    L2LL3 = statement->GetInt(7);
-    L3 = statement->GetInt(8);
-    VDAQBusy = statement->GetDouble(9);
-    VDAQBusyScaler = statement->GetUInt(10);
-    TenMHzScaler = statement->GetUInt(11);
+    L3 = statement->GetInt(2);
+    L3orVDAQBusy = statement->GetDouble(3);
+    VDAQBusy = statement->GetDouble(4);
+    SpareBusy = statement->GetDouble(5);
+    PED = statement->GetUInt(6);
+    OC = statement->GetUInt(7);
+    VDAQBusyScaler = statement->GetUInt(8);
+    L3orVDAQBusyScaler = statement->GetUInt(9);
+    TenMHzScaler = statement->GetUInt(10);
 }
 
-int tblL3_Telescope_TriggerInfo::fillByRun(int runID)
+int tblL3_Array_TriggerInfo::fillByRun(int runID)
 {
     pingServer();
     TTimeStamp start, stop;
@@ -62,11 +60,13 @@ int tblL3_Telescope_TriggerInfo::fillByRun(int runID)
 
     if (start.AsDouble() <= 1.e-9 || stop.AsDouble() <= 1.e-9)
     {
-        std::cerr << "tblL3_Telescope_TriggerInfo::fillByRun: start: " <<
+        std::cerr << "tblL3_Array_TriggerInfo::fillByRun: start: " <<
             start.AsString() << ", stop: " << stop.AsString() << std::endl;
         return 0;
     }
 
+    // we pad the timestamps with 0s on the right because tblRun_Info timestamps
+    // are different from L3 table timestamps
     std::ostringstream start_timestamp;
     start_timestamp << start.GetDate() << std::setfill('0') << std::setw(6) <<
         start.GetTime() << "000";

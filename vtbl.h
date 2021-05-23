@@ -19,12 +19,15 @@ struct VTBLS
 class vtbl: public TObject
 {
     protected:
+        // vtbls must be updated when a new table is added.
 	static const std::vector<struct VTBLS> vtbls; //! no streamer
         static TMySQLServer server;  //! no streamer
 
 	std::string tblName;  //! no streamer
 	std::string treeName; //! no streamer
 	int nFields;          //! no streamer
+
+	unsigned long entry;  // entry/event number counter
 
 	TTree *tree;  //! no streamer
 
@@ -49,6 +52,9 @@ class vtbl: public TObject
 	//virtual int queryByStatement(TSQLServer *server, std::string stmt);
 	virtual void getRunTimes(int runID, TTimeStamp &db_start_time,
             TTimeStamp &db_end_time) const;
+
+        virtual unsigned long get_entry() const { return entry; }
+        virtual void set_entry(unsigned long entry_) { entry = entry_; }
 
 	virtual TTree *getTree() const { return tree; }
 	virtual void setTree(TTree *tree_) { tree = tree_; }

@@ -8,6 +8,7 @@
 #include "TMySQLStatement.h"
 #include "TTree.h"
 
+#include "tblL3_Array_TriggerInfo.h"
 #include "tblL3_Telescope_TriggerInfo.h"
 #include "tblRun_Info.h"
 
@@ -22,7 +23,7 @@ class tbl2root
 	vtbl *getTbl(const char *tblName) const;
 	void printTblList() const { if (tblList) tblList->Print(); }
         
-        int queryByRun(const char *tblName, int runNum);
+        int fillByRun(int runNum);
 
     private:
         TMySQLServer *db;

@@ -4,6 +4,7 @@
 #include <string>
 
 #include "vtbl.h"
+#include "tblL3_Array_TriggerInfo.h"
 #include "tblL3_Telescope_TriggerInfo.h"
 #include "tblRun_Info.h"
 

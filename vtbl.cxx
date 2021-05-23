@@ -11,6 +11,7 @@ ClassImp(vtbl);
 
 // struct which defines what tables can be handled.
 const std::vector<struct VTBLS> vtbl::vtbls = {
+    {"tblL3_Array_TriggerInfo", "tblL3_Array_TriggerInfo", 11},
     {"tblL3_Telescope_TriggerInfo", "tblL3_Telescope_TriggerInfo", 12},
     {"tblRun_Info", "tblRun_Info", 20}
 };
@@ -30,6 +31,7 @@ vtbl::vtbl(std::string tblName_)
 
     tblName = tblName_;
     nFields = it->nFields;
+    entry = 0;
 
     //std::cout << vtbl::server.ServerInfo() << std::endl;
 }
@@ -74,6 +76,7 @@ int vtbl::fill(TSQLStatement *statement, int verbose)
     int nbytes = 0;
     while (statement->NextResultRow())
     {
+        entry++;
         fillTblFields(statement, verbose);
         if (tree) nbytes += tree->Fill();
     }
