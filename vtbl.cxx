@@ -13,7 +13,8 @@ ClassImp(vtbl);
 const std::vector<struct VTBLS> vtbl::vtbls = {
     {"tblL3_Array_TriggerInfo", "tblL3_Array_TriggerInfo", 11},
     {"tblL3_Telescope_TriggerInfo", "tblL3_Telescope_TriggerInfo", 12},
-    {"tblRun_Info", "tblRun_Info", 20}
+    {"tblRun_Info", "tblRun_Info", 20},
+    {"tblWeather_Status", "tblWeather_Status", 12},
 };
 
 TMySQLServer vtbl::server("mysql://romulus.ucsc.edu/VERITAS",
