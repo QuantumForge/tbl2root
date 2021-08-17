@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -152,4 +153,41 @@ TTimeStamp vtbl::xformIntToTimestamp(long timestamp) const
     //std::cout << year << " " << month << " " << day << " " << hour << " " <<
     //    minute << " " << second << " " << nsec << std::endl;
     return TTimeStamp(year, month, day, hour, minute, second, nsec);
+}
+
+int vtbl::fillByDate(const char *yyyymmdd, bool verbose)
+{
+    std::string date(yyyymmdd);
+    int year  = std::stoi(date.substr(0, 4));
+    int month = std::stoi(date.substr(4, 2));
+    int day   = std::stoi(date.substr(6, 2));
+
+    return fillByDate(year, month, day, verbose);
+}
+
+
+int vtbl::fillByDate(int year, int month, int day, bool verbose)
+{
+    std::ostringstream os;
+    os << std::setw(4) << std::setfill('0') << year << "-" << std::setw(2) <<
+        month << "-" << std::setw(2) << day << " 00:00:00";
+    std::string start_time = os.str();
+    os.str("");
+    os << std::setw(4) << std::setfill('0') << year << "-" << std::setw(2) <<
+        month << "-" << std::setw(2) << day << " 23:59:59";
+    std::string stop_time = os.str();
+  
+    os.str(""); 
+    os << "SELECT * FROM " << tblName << " WHERE " <<
+        "timestamp >= '" << start_time << "' AND timestamp <= '" <<
+        stop_time << "'";
+    std::string query(os.str().c_str());
+    if (verbose)
+        std:: cout << "query: " << query << std::endl;
+    TMySQLStatement *result =
+        (TMySQLStatement*)vtbl::server.Statement(query.c_str());
+
+    int k = fill(result);
+    delete result;
+    return k;
 }

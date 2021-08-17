@@ -66,4 +66,4 @@ clean: clean-obj
 	rm -f $(shobj) $(binary) $(mapobj)
 clean-obj:
 	rm -f $(obj) $(dictobj) $(dictheader) $(dictsource) \
-		*_rdict.pcm *_C.so *_C.d *_cxx.so *_cxx.d
+		*_C.so *_C.d *_cxx.so *_cxx.d

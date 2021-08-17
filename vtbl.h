@@ -49,6 +49,12 @@ class vtbl: public TObject
 
 	//virtual std::string getRunTimesClause(TTimeStamp startTime,
         //    TTimeStamp stopTime) const = 0;
+
+        // each derived class must implement its own fillTblFields method.
+        // fillTblFields uses the provided TSQLStatement to fill the 
+        // class members data from the info read from the data base for
+        // a single row. this method basically translates mysql data to
+        // ROOT tree leaves.
 	virtual void fillTblFields(TSQLStatement *statement,
             int verbose = 0) = 0;
         virtual TTimeStamp xformIntToTimestamp(long timestamp) const;
@@ -59,9 +65,24 @@ class vtbl: public TObject
 	
 	virtual void Clear(Option_t * = "") = 0;
         virtual void describe() const;
+
+
+
+        // use fill in a method to to get the
+        // data into the ROOT tree. this should be used in a method like
+        // fillByRun or fillByDate, where a selection clause is used to
+        // pick events (e.g., get all events in tbl_L3_Array_TriggerInfo for
+        // 20210614) and  creating a TMySQLStatement. that statement is
+        // given to the fill method, which will loop over all rows in the
+        // statement and run fillTblFields on each one to extract the data
+        // into the class members (and ROOT tree).
 	virtual int fill(TSQLStatement *statement, int verbose = 0);
+
         virtual std::string getTblName() const { return tblName; }
 	virtual int getNFields() const { return nFields; }
+
+        // call pingServer in your the beginning of your methods that
+        // access the database and readout data with the fill method.
         virtual bool pingServer() const { return vtbl::server.PingVerify(); }
 
         // fills class members from the mysql table for a given run id.
@@ -71,6 +92,15 @@ class vtbl: public TObject
         // see for example tblL3_Array_TriggerInfo.cxx
         virtual int fillByRun(int runID);
 	//virtual int queryByStatement(TSQLServer *server, std::string stmt);
+        
+        // fills class members from the mysql table for a given date
+        // example in tblWeather_Status
+        virtual int fillByDate(const char *yyyymmdd, bool verbose = false);
+	virtual int fillByDate(int year, int month, int day,
+                bool verbose = false);
+        //int fillByDate(TTimeStamp *ts);
+
+
 
 	// User provides a run id, and the start and stop times are searched
 	// in the tblRun_Info table. Using start and and stop times when

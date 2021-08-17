@@ -28,10 +28,6 @@ class tblWeather_Status: public vtbl
         ~tblWeather_Status();
 
 	void Clear(Option_t * = "");
-        int fillByDate(const char *yyyymmdd);
-        //int fillByDate(TTimeStamp *ts);
-	int fillByDate(int year, int month, int day);
-
 	TTimeStamp get_timestamp() const { return timestamp; }
 	double get_Batt_Volt() const { return Batt_Volt; }
 	double get_WS_mph_Avg() const { return WS_mph_Avg; }
