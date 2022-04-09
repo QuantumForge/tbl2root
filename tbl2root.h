@@ -9,6 +9,7 @@
 #include "TTree.h"
 
 #include "tblL3_Array_TriggerInfo.h"
+#include "tblFIR_Pyrometer_Info.h"
 #include "tblL3_Telescope_TriggerInfo.h"
 #include "tblRun_Info.h"
 

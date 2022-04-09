@@ -12,6 +12,7 @@ ClassImp(vtbl);
 
 // struct which defines what tables can be handled.
 const std::vector<struct VTBLS> vtbl::vtbls = {
+    {"tblFIR_Pyrometer_Info", "tblFIR_Pyrometer_Info", 4},
     {"tblL3_Array_TriggerInfo", "tblL3_Array_TriggerInfo", 11},
     {"tblL3_Telescope_TriggerInfo", "tblL3_Telescope_TriggerInfo", 12},
     {"tblRun_Info", "tblRun_Info", 20},

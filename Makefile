@@ -7,6 +7,7 @@ CFLAGS=$(ROOT_CFLAGS) -fPIC -Wall -Wshadow
 
 obj = vtbl.o \
 	vtblFactory.o \
+	tblFIR_Pyrometer_Info.o \
 	tblL3_Array_TriggerInfo.o \
 	tblL3_Telescope_TriggerInfo.o \
 	tblRun_Info.o \
@@ -14,6 +15,7 @@ obj = vtbl.o \
 	tbl2root.o
 dictobj = vtblDict.o \
 	vtblFactoryDict.o \
+	tblFIR_Pyrometer_InfoDict.o \
 	tblL3_Array_TriggerInfoDict.o \
 	tblL3_Telescope_TriggerInfoDict.o \
 	tblRun_InfoDict.o \
@@ -21,6 +23,7 @@ dictobj = vtblDict.o \
 	tbl2rootDict.o
 dictheader = vtblDict.h \
 	vtblFactoryDict.h \
+	tblFIR_Pyrometer_InfoDict.h \
 	tblL3_Array_TriggerInfoDict.h \
 	tblL3_Telescope_TriggerInfoDict.h \
 	tblRun_InfoDict.h \
@@ -28,13 +31,15 @@ dictheader = vtblDict.h \
 	tbl2rootDict.h
 dictsource = vtblDict.C \
 	vtblFactoryDict.C \
+	tblFIR_Pyrometer_InfoDict.C \
 	tblL3_Array_TriggerInfoDict.C \
 	tblL3_Telescope_TriggerInfoDict.C \
 	tblRun_InfoDict.C \
         tblWeather_StatusDict.C \
 	tbl2rootDict.C
 dictlinkdef = vtblLinkDef.h \
-	vtblFectoryLinkDef.h \
+	vtblFactoryLinkDef.h \
+	tblFIR_Pyrometer_InfoLinkDef.h \
 	tblL3_Array_TriggerInfoLinkDef.h \
 	tblL3_Telescope_TriggerInfoLinkDef.h \
 	tblRun_InfoLinkDef.h \
