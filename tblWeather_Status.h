@@ -4,6 +4,7 @@
 #include "TTimeStamp.h"
 #include "vtbl.h"
 
+// http://romulus.ucsc.edu/phpmyadmin/index.php?db=VERITAS&token=c11f5e693f445a4e2241c0bcb915e82f
 class tblWeather_Status: public vtbl
 {
     protected:
