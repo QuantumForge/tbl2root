@@ -8,6 +8,7 @@
 #include "TSQLTableInfo.h"
 
 #include "vtbl.h"
+#include "vtbl_private.h"
 ClassImp(vtbl);
 
 // struct which defines what tables can be handled.
@@ -19,8 +20,7 @@ const std::vector<struct VTBLS> vtbl::vtbls = {
     {"tblWeather_Status", "tblWeather_Status", 12},
 };
 
-TMySQLServer vtbl::server("mysql://romulus.ucsc.edu/VERITAS",
-    "readonly", "");
+TMySQLServer vtbl::server(VTBL_DB, VTBL_UID, VTBL_PW);
 
 vtbl::vtbl(std::string tblName_)
 {

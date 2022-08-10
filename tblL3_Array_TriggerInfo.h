@@ -4,7 +4,6 @@
 #include "TTimeStamp.h"
 #include "vtbl.h"
 
-// http://romulus.ucsc.edu/phpmyadmin/tbl_structure.php?db=VERITAS&table=tblL3_Array_TriggerInfo
 class tblL3_Array_TriggerInfo: public vtbl
 {
     protected:
